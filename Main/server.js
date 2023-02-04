@@ -1,7 +1,6 @@
 const cTable = require('console.table');
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const sql = require(".");
 const express = require('express');
 const util = require("util");
 
@@ -22,7 +21,8 @@ const db = mysql.createConnection(
       );
 db.connect();
 db.query = util.promisify(db.query);
-openApp()
+openApp();
+
 async function openApp () {
     let decision = await inquirer.prompt([
         {
@@ -216,7 +216,7 @@ async function selectDepartment() {
     console.table(department);
     openApp();
 }
-async function newDepartment() {
+async function addDepartment() {
     let answer = await inquirer.prompt([
         {
             type: "input",
@@ -225,7 +225,14 @@ async function newDepartment() {
         },
     ]);
     await db.query("INSERT INTO department SET name=?", answer.department_name);
-    const newDepartment = await db.wuery("SELECT * FROM department");
-    console.table(newDepartment);
+    const addDepartment = await db.wuery("SELECT * FROM department");
+    console.table(addDepartment);
     openApp();
 }
+app.use((req, res) => {
+    res.status(404).end();
+  });
+  
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
